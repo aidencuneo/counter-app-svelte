@@ -4,6 +4,7 @@
     import Counter from '$lib/Counter.svelte';
     import DateSelector from '$lib/DateSelector.svelte';
     import Header from '$lib/Header.svelte';
+    import { onMount } from 'svelte';
 
     let page = $state('counters');
     let counters = $state([]);
@@ -14,6 +15,10 @@
         ['bouldering', '#eeda12'],
         ['bouldering 2', '#eeeeee'],
     ];
+
+    // Reordering counters
+    let draggingIndex = $state(-1);
+    let counterPositions = [];
 
     const getPage = () => page;
     const setPage = p => page = p;
@@ -35,13 +40,66 @@
             return;
         }
 
+        colour ??= counters[index][1];
         counters[index] = [name, colour];
+
         // console.log(counters);
         // data.saveCounters();
     }
 
+    // Reordering counters
+
+    const dragStart = e => {
+        counterPositions = [];
+        const counterElems = document.getElementsByTagName('counter');
+        let i;
+
+        for (i = 0; i < counterElems.length; ++i) {
+            const y = counterElems[i].getBoundingClientRect().y;
+            counterPositions.push(y);
+
+            if (e.clientY > y)
+                draggingIndex = i;
+        }
+
+        console.log(draggingIndex, counterPositions);
+    }
+
+    const dragging = e => {
+        if (draggingIndex < 0)
+            return;
+
+        const before = draggingIndex > 0 ? counterPositions[draggingIndex] : -1;
+        const after = draggingIndex + 1 < counterPositions.length ? counterPositions[draggingIndex + 1] : -1;
+
+        if (e.clientY < before && before > 0) {
+            const draggingElem = counters.splice(draggingIndex, 1)[0];
+            counters.splice(--draggingIndex, 0, draggingElem);
+        }
+
+        else if (e.clientY > after && after > 0) {
+            const draggingElem = counters.splice(draggingIndex, 1)[0];
+            counters.splice(++draggingIndex, 0, draggingElem);
+        }
+    }
+
+    const dragEnd = e => {
+        draggingIndex = -1;
+        console.log(e.clientY);
+    }
+
     const getCounters = () => counters;
     const setCounters = c => counters = c;
+
+    onMount(() => {
+        document.body.addEventListener('mousemove', dragging);
+        document.body.addEventListener('mouseup', dragEnd);
+
+        return () => {
+            document.body.removeEventListener('mousemove', dragging);
+            document.body.removeEventListener('mouseup', dragEnd);
+        };
+    });
 </script>
 
 <Header {getPage} {setPage} />
@@ -51,8 +109,9 @@
     {#each counters as c, index}
         <Counter
             name={c[0]} bg={c[1]}
+            isDragging={index == draggingIndex}
             setInfo={(name, colour) => updateCounter(index, name, colour)}
-            {getCounters} {setCounters} />
+            {getCounters} {setCounters} {dragStart} />
     {/each}
     <Button bg='#25dc7b' onclick={addCounter}>Add Counter</Button>
 {:else if page == 'stats'}
