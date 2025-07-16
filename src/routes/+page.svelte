@@ -66,6 +66,8 @@
     }
 
     const dragging = e => {
+        log = '' + e.clientY; // Remove this later
+
         if (draggingIndex < 0)
             return;
 
@@ -92,14 +94,20 @@
     const setCounters = c => counters = c;
 
     onMount(() => {
+        document.body.addEventListener('mousemove', dragging);
         document.body.addEventListener('touchmove', dragging);
+        document.body.addEventListener('mouseup', dragEnd);
         document.body.addEventListener('touchend', dragEnd);
 
         return () => {
+            document.body.removeEventListener('mousemove', dragging);
             document.body.removeEventListener('touchmove', dragging);
+            document.body.removeEventListener('mouseup', dragEnd);
             document.body.removeEventListener('touchend', dragEnd);
         };
     });
+
+    let log = $state('log'); // Remove this later
 </script>
 
 <Header {getPage} {setPage} />
@@ -114,6 +122,7 @@
             {getCounters} {setCounters} {dragStart} />
     {/each}
     <Button bg='#25dc7b' onclick={addCounter}>Add Counter</Button>
+    Log: "{log}"
 {:else if page == 'stats'}
     <div>other page</div>
 {/if}
