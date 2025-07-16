@@ -92,12 +92,12 @@
     const setCounters = c => counters = c;
 
     onMount(() => {
-        document.body.addEventListener('mousemove', dragging);
-        document.body.addEventListener('mouseup', dragEnd);
+        document.body.addEventListener('touchmove', dragging);
+        document.body.addEventListener('touchend', dragEnd);
 
         return () => {
-            document.body.removeEventListener('mousemove', dragging);
-            document.body.removeEventListener('mouseup', dragEnd);
+            document.body.removeEventListener('touchmove', dragging);
+            document.body.removeEventListener('touchend', dragEnd);
         };
     });
 </script>
@@ -106,7 +106,7 @@
 
 {#if page == 'counters'}
     <DateSelector />
-    {#each counters as c, index}
+    {#each counters as c, index (c[0])}
         <Counter
             name={c[0]} bg={c[1]}
             isDragging={index == draggingIndex}

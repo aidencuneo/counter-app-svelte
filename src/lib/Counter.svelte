@@ -28,7 +28,7 @@
     ">
     <div>
         <Icon padding='0 5px 0 0'
-            onmousedown={dragStart}
+            ontouchstart={dragStart}
         >
             drag_indicator
         </Icon>
