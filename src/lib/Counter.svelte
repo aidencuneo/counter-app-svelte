@@ -32,8 +32,7 @@
 
     $effect(() => {
         // Save value when it changes
-        if (value)
-            data.setCount(name, value, date);
+        data.setCount(name, value, date);
     });
 </script>
 
@@ -45,7 +44,7 @@
         z-index: {isDragging ? 1 : 0};
     ">
     <div>
-        <Icon id='drag-btn' padding='0 5px 0 0'>
+        <Icon id='drag-btn' padding='0 5px 0 12px'>
             drag_indicator
         </Icon>
 
@@ -72,7 +71,7 @@
         display: flex;
         position: relative;
         justify-content: space-between;
-        padding: 10px 12px;
+        padding: 10px 9px 10px 0px;
         user-select: none;
         transition: box-shadow 0.1s ease-out;
         touch-action: none;

@@ -5,11 +5,48 @@
     import { getRandColour } from './colourUtil';
     import * as data from './data';
     import { onMount } from 'svelte';
+    import { addDays, addYears, today } from './dates.js';
 
     let { name, timeMode } = $props();
 
     let canvas = $state();
     let lastChart;
+
+    const getDateRange = () => {
+        let from = today();
+        let to = from;
+
+        if (timeMode === '3days')
+            to = addDays(to, -2);
+        else if (timeMode === '7days')
+            to = addDays(to, -6);
+        else if (timeMode === '14days')
+            to = addDays(to, -13);
+        else if (timeMode === 'thismonth')
+            to = addDays(to, -new Date(to).getDate() + 1);
+        else if (timeMode === 'lastmonth') {
+            from = addDays(to, -new Date(to).getDate());
+            to = addDays(from, -new Date(from).getDate() + 1);
+        } else if (timeMode === '30days')
+            to = addDays(to, -29);
+        else if (timeMode === '90days')
+            to = addDays(to, -89);
+        else if (timeMode === 'thisyear') {
+            to = `${new Date(to).getFullYear()}-01-01`;
+        } else if (timeMode === 'lastyear') {
+            from = `${new Date(to).getFullYear() - 1}-12-31`;
+            to = `${new Date(to).getFullYear() - 1}-01-01`;
+        } else if (timeMode === '1year')
+            to = addYears(to, -1);
+        else if (timeMode === '2years')
+            to = addYears(to, -2);
+        else if (timeMode === 'alltime') {
+            from = undefined;
+            to = undefined;
+        }
+
+        return [from, to];
+    }
 
     const redraw = () => {
         if (lastChart)
@@ -18,7 +55,8 @@
         if (!name)
             return;
 
-        let valuesDict = data.gatherValues(name);
+        let [from, to] = getDateRange();
+        let valuesDict = data.gatherValues(name, from, to);
         let labels = Object.keys(valuesDict);
 
         // Ascending order
@@ -34,12 +72,20 @@
             canvas,
             {
                 type: 'line',
+                options: {
+                    animation: {
+                        // Animate a little quicker (default = 1000)
+                        duration: 800,
+                    },
+                },
                 data: {
                     labels,
                     datasets: [{
                         label: name,
                         data: values,
                         backgroundColor: colour,
+                        borderColor: colour,
+                        pointRadius: 4,
                     }],
                 },
             },
@@ -98,6 +144,5 @@
 <style>
     canvas {
         margin-bottom: 15px;
-        margin-right: 3px;
     }
 </style>

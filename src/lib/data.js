@@ -5,12 +5,29 @@ export function saveCounters(counters) {
 }
 
 export function getCounters() {
-    let countersStr = localStorage.getItem('counter_counters');
+    // Transfer data if needed
+    if (localStorage.getItem('counter_counters') && !localStorage.getItem('counter_values'))
+        transferData();
 
-    if (countersStr)
-        return JSON.parse(countersStr);
+    return JSON.parse(localStorage.getItem('counter_counters') ?? '[]');
+}
 
-    return [];
+function transferData() {
+    let IDValues = {};
+
+    for (let i = 0; i < localStorage.length; ++i) {
+        let k = localStorage.key(i);
+        if (k.startsWith('counter_') && k.endsWith('_values') && k.length > 'counter_values'.length)
+            IDValues[k.substring(8, k.length - 7)] = localStorage.getItem(k);
+    }
+
+    let counters = JSON.parse(localStorage.getItem('counter_counters') ?? '[]');
+    let values = {};
+
+    for (let i = 0; i < counters.length; ++i)
+        values[counters[i][0]] = JSON.parse(IDValues[counters[i][0].toLowerCase()]);
+
+    saveValues(values);
 }
 
 export function saveValues(values) {

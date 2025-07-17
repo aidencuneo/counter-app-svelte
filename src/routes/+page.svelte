@@ -7,6 +7,7 @@
     import { today } from '$lib/dates';
     import DateSelector from '$lib/DateSelector.svelte';
     import Header from '$lib/Header.svelte';
+    import XSpacer from '$lib/XSpacer.svelte';
     import { onMount } from 'svelte';
 
     let page = $state('counters');
@@ -19,6 +20,7 @@
     // Stats page
     let statName = $state();
     let timeMode = $state();
+    let importFileInput = $state();
 
     // Reordering counters
     let draggingIndex = $state(-1);
@@ -96,22 +98,47 @@
     const setCounters = c => counters = c;
 
     const importPrompt = () => {
-
+        importFileInput.click();
     }
 
-    const imporData = () => {
+    const importData = () => {
+        const file = importFileInput.files[0];
 
+        if (!file)
+            return;
+
+        const reader = new FileReader();
+        reader.readAsText(file, 'utf-8');
+
+        reader.onload = e => {
+            data.importFromJSON(e.target.result);
+            counters = data.getCounters();
+            page = 'counters';
+        }
+
+        reader.onerror = e => alert('Error reading file');
     }
 
     const exportData = () => {
+        const fileContent = data.exportToJSON();
+        const blob = new Blob([fileContent], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
 
+        // Download as a file
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `counter_data_${today()}.json`;
+        a.click();
+
+        URL.revokeObjectURL(url); // Release object URL
     }
 
     const clearData = () => {
         if (confirm('Are you sure you want to clear all counter data?'))
             data.clear();
 
-        counters = counters;
+        counters = [];
+        page = 'counters';
     }
 
     onMount(() => {
@@ -201,8 +228,28 @@
 
     <Chart name={statName} {timeMode} />
 
-    <div class="container">
-        <input type="file" accept="application/json" id="fileInput" style="display: none" onchange={importData}>
+    <div class="info-container">
+      <div id="totalStatDiv">Total: 0</div>
+      <div id="longestStreakStatDiv">Longest Streak: 0</div>
+    </div>
+
+    <div class="info-container">
+      <div id="averageStatDiv">Average: 0</div>
+      <div id="currentStreakStatDiv">Current Streak: 0</div>
+    </div>
+
+    <div class="info-container">
+      <div id="maxStatDiv">Max: 0</div>
+      <div id="longestZeroStreakStatDiv">Longest Zero Streak: 0</div>
+    </div>
+
+    <div class="info-container">
+      <div id="gradientStatDiv">Gradient: +0</div>
+      <div id="currentZeroStreakStatDiv">Current Zero Streak: 0</div>
+    </div>
+
+    <div class="container" style:margin-top="15px">
+        <input bind:this={importFileInput} type="file" accept="application/json" style="display: none" onchange={importData}>
         <Button bg="#a9d4ff" onclick={importPrompt}>Import Data</Button>
         <Button bg="#25dc7b" onclick={exportData}>Export Data</Button>
         <Button bg="#ef3535" onclick={clearData}>Clear Data</Button>
@@ -210,6 +257,12 @@
 {/if}
 
 <style>
+    .info-container {
+        display: flex;
+        justify-content: space-between;
+        padding: 5px 30px;
+    }
+
     .container {
         display: flex;
         flex-direction: row;
