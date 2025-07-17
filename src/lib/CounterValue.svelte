@@ -14,6 +14,7 @@
         flex-direction: row;
         font-weight: bold;
         text-align: center;
+        font-size: 22px;
     }
 
     button {

@@ -4,7 +4,7 @@
     import Icon from './Icon.svelte';
     import Spacer from './XSpacer.svelte';
 
-    let { name, bg, isDragging, setInfo, getCounters, setCounters, dragStart } = $props();
+    let { name, bg, isDragging, setInfo, getCounters, setCounters } = $props();
 
     let value = $state(0);
 
@@ -27,10 +27,7 @@
         z-index: {isDragging ? 1 : 0};
     ">
     <div>
-        <Icon padding='0 5px 0 0'
-            onmousedown={dragStart}
-            ontouchstart={dragStart}
-        >
+        <Icon id='drag-btn' padding='0 5px 0 0'>
             drag_indicator
         </Icon>
 
@@ -49,7 +46,7 @@
         <span onclick={renameCounter}>{name}</span>
     </div>
 
-    <CounterValue bind:value={value} />
+    <CounterValue bind:value />
 </counter>
 
 <style>
@@ -57,8 +54,21 @@
         display: flex;
         position: relative;
         justify-content: space-between;
-        padding: 15px 12px;
+        padding: 12px 12px;
         user-select: none;
         transition: box-shadow 0.1s ease-out;
+    }
+
+    div {
+        display: flex;
+        align-items: center;
+    }
+
+    span {
+        padding-bottom: 3px;
+    }
+
+    #drag-btn {
+        
     }
 </style>

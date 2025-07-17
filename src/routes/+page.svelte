@@ -50,6 +50,8 @@
     // Reordering counters
 
     const dragStart = e => {
+        let clientY = e.clientY || e.touches[0].clientY;
+
         counterPositions = [];
         const counterElems = document.getElementsByTagName('counter');
         let i;
@@ -58,52 +60,56 @@
             const y = counterElems[i].getBoundingClientRect().y;
             counterPositions.push(y);
 
-            if (e.clientY > y)
+            if (clientY > y)
                 draggingIndex = i;
         }
 
-        console.log(draggingIndex, counterPositions);
+        log = draggingIndex + ', ' + counterPositions;
     }
 
     const dragging = e => {
-        log = '' + e.clientY; // Remove this later
-
         if (draggingIndex < 0)
             return;
+
+        let clientY = e.clientY || e.touches[0].clientY;
+        log = '' + clientY; // Remove this later
+
+        e.preventDefault();
 
         const before = draggingIndex > 0 ? counterPositions[draggingIndex] : -1;
         const after = draggingIndex + 1 < counterPositions.length ? counterPositions[draggingIndex + 1] : -1;
 
-        if (e.clientY < before && before > 0) {
+        if (clientY < before && before > 0) {
             const draggingElem = counters.splice(draggingIndex, 1)[0];
             counters.splice(--draggingIndex, 0, draggingElem);
         }
 
-        else if (e.clientY > after && after > 0) {
+        else if (clientY > after && after > 0) {
             const draggingElem = counters.splice(draggingIndex, 1)[0];
             counters.splice(++draggingIndex, 0, draggingElem);
         }
     }
 
-    const dragEnd = e => {
-        draggingIndex = -1;
-        console.log(e.clientY);
-    }
+    const dragEnd = e => draggingIndex = -1;
 
     const getCounters = () => counters;
     const setCounters = c => counters = c;
 
     onMount(() => {
-        document.body.addEventListener('mousemove', dragging);
-        document.body.addEventListener('touchmove', dragging);
-        document.body.addEventListener('mouseup', dragEnd);
-        document.body.addEventListener('touchend', dragEnd);
+        window.addEventListener('mousedown', dragStart);
+        window.addEventListener('touchstart', dragStart);
+        window.addEventListener('mousemove', dragging);
+        window.addEventListener('touchmove', dragging);
+        window.addEventListener('mouseup', dragEnd);
+        window.addEventListener('touchend', dragEnd);
 
         return () => {
-            document.body.removeEventListener('mousemove', dragging);
-            document.body.removeEventListener('touchmove', dragging);
-            document.body.removeEventListener('mouseup', dragEnd);
-            document.body.removeEventListener('touchend', dragEnd);
+            window.removeEventListener('mousedown', dragStart);
+            window.removeEventListener('touchstart', dragStart);
+            window.removeEventListener('mousemove', dragging);
+            window.removeEventListener('touchmove', dragging);
+            window.removeEventListener('mouseup', dragEnd);
+            window.removeEventListener('touchend', dragEnd);
         };
     });
 
@@ -119,10 +125,17 @@
             name={c[0]} bg={c[1]}
             isDragging={index == draggingIndex}
             setInfo={(name, colour) => updateCounter(index, name, colour)}
-            {getCounters} {setCounters} {dragStart} />
+            {getCounters} {setCounters} />
     {/each}
     <Button bg='#25dc7b' onclick={addCounter}>Add Counter</Button>
     Log: "{log}"
 {:else if page == 'stats'}
     <div>other page</div>
 {/if}
+
+<!-- Remove this whole section later -->
+<style>
+    :global(body) {
+	    background: black; /* Remove later */
+    }
+</style>
