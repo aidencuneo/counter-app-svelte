@@ -3,8 +3,11 @@
     import CounterValue from './CounterValue.svelte';
     import Icon from './Icon.svelte';
     import Spacer from './XSpacer.svelte';
+    import * as data from './data';
+    import { onMount } from 'svelte';
+    import { today } from './dates';
 
-    let { name, bg, isDragging, setInfo, getCounters, setCounters } = $props();
+    let { name, bg, date, isDragging, setInfo, getCounters, setCounters } = $props();
 
     let value = $state(0);
 
@@ -17,6 +20,21 @@
         setInfo(newName);
         setCounters(getCounters());
     }
+
+    onMount(() => {
+        value = data.getCount(name, date);
+    });
+
+    $effect(() => {
+        // Update value when date changes
+        value = data.getCount(name, date);
+    });
+
+    $effect(() => {
+        // Save value when it changes
+        if (value)
+            data.setCount(name, value, date);
+    });
 </script>
 
 <counter
@@ -57,6 +75,8 @@
         padding: 12px 12px;
         user-select: none;
         transition: box-shadow 0.1s ease-out;
+        touch-action: none;
+        -ms-touch-action: none;
     }
 
     div {
@@ -66,9 +86,5 @@
 
     span {
         padding-bottom: 3px;
-    }
-
-    #drag-btn {
-        
     }
 </style>

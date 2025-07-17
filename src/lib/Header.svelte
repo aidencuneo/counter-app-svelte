@@ -1,20 +1,20 @@
 <script>
     import Button from './Button.svelte';
 
-    let { getPage, setPage } = $props();
+    let { page = $bindable() } = $props();
 </script>
 
 <div>
     <Button
-        bg={getPage() == 'counters' ? '#a9d4ff' : '#eee'}
-        onclick={() => setPage('counters')}
+        bg={page == 'counters' ? '#a9d4ff' : '#eee'}
+        onclick={() => page = 'counters'}
     >
         Counters
     </Button>
 
     <Button
-        bg={getPage() == 'stats' ? '#a9d4ff' : '#eee'}
-        onclick={() => setPage('stats')}
+        bg={page == 'stats' ? '#a9d4ff' : '#eee'}
+        onclick={() => page = 'stats'}
     >
         Stats
     </Button>

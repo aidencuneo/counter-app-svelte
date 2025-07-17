@@ -2,6 +2,8 @@
     import Button from '$lib/Button.svelte';
     import { getRandColour } from '$lib/colourUtil';
     import Counter from '$lib/Counter.svelte';
+    import * as data from '$lib/data';
+    import { today } from '$lib/dates';
     import DateSelector from '$lib/DateSelector.svelte';
     import Header from '$lib/Header.svelte';
     import { onMount } from 'svelte';
@@ -9,12 +11,9 @@
     let page = $state('counters');
     let counters = $state([]);
 
-    counters = [
-        ['sleep time', '#9212a8'],
-        ['distracted', '#620683'],
-        ['bouldering', '#eeda12'],
-        ['bouldering 2', '#eeeeee'],
-    ];
+    // Selected date
+    let selectedDate = $state(today());
+    $inspect(selectedDate);
 
     // Reordering counters
     let draggingIndex = $state(-1);
@@ -30,7 +29,6 @@
             return;
 
         counters.push([name, getRandColour()]);
-        // data.saveCounters();
     }
 
     const updateCounter = (index, name, colour) => {
@@ -42,14 +40,14 @@
 
         colour ??= counters[index][1];
         counters[index] = [name, colour];
-
-        // console.log(counters);
-        // data.saveCounters();
     }
 
     // Reordering counters
 
     const dragStart = e => {
+        if (e.target.id != 'drag-btn')
+            return;
+
         let clientY = e.clientY || e.touches[0].clientY;
 
         counterPositions = [];
@@ -72,9 +70,6 @@
             return;
 
         let clientY = e.clientY || e.touches[0].clientY;
-        log = '' + clientY; // Remove this later
-
-        e.preventDefault();
 
         const before = draggingIndex > 0 ? counterPositions[draggingIndex] : -1;
         const after = draggingIndex + 1 < counterPositions.length ? counterPositions[draggingIndex + 1] : -1;
@@ -95,7 +90,28 @@
     const getCounters = () => counters;
     const setCounters = c => counters = c;
 
+    const importPrompt = () => {
+
+    }
+
+    const imporData = () => {
+
+    }
+
+    const exportData = () => {
+
+    }
+
+    const clearData = () => {
+        if (confirm('Are you sure you want to clear all counter data?'))
+            data.clear();
+
+        counters = counters;
+    }
+
     onMount(() => {
+        counters = data.getCounters();
+
         window.addEventListener('mousedown', dragStart);
         window.addEventListener('touchstart', dragStart);
         window.addEventListener('mousemove', dragging);
@@ -113,29 +129,51 @@
         };
     });
 
-    let log = $state('log'); // Remove this later
+    $effect(() => {
+        let newCounters = $state.snapshot(counters);
+        if (newCounters != data.getCounters())
+            data.saveCounters($state.snapshot(counters));
+    });
 </script>
 
-<Header {getPage} {setPage} />
+<Header bind:page />
 
 {#if page == 'counters'}
-    <DateSelector />
-    {#each counters as c, index (c[0])}
+    <DateSelector bind:selectedDate />
+    {#each counters as c, index (c)}
         <Counter
             name={c[0]} bg={c[1]}
+            date={selectedDate}
             isDragging={index == draggingIndex}
             setInfo={(name, colour) => updateCounter(index, name, colour)}
             {getCounters} {setCounters} />
     {/each}
     <Button bg='#25dc7b' onclick={addCounter}>Add Counter</Button>
-    Log: "{log}"
 {:else if page == 'stats'}
-    <div>other page</div>
+    <div class="btn-container">
+        <input type="file" accept="application/json" id="fileInput" style="display: none" onchange={importData}>
+        <button style="background: #a9d4ff" onclick={importPrompt}>Import Data</button>
+        <button style="background: #25dc7b" onclick={exportData}>Export Data</button>
+        <button style="background: #ef3535" onclick={clearData}>Clear Data</button>
+    </div>
 {/if}
 
 <!-- Remove this whole section later -->
 <style>
     :global(body) {
-	    background: black; /* Remove later */
+	    background: #222; /* Remove later */
+    }
+
+    .btn-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    button {
+        font: inherit;
+        border: none;
+        width: 100%;
+        padding: 15px 30px;
     }
 </style>

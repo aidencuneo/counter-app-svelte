@@ -1,10 +1,17 @@
 <script>
     let { value = $bindable() } = $props();
+
+    const changeValue = () => {
+        const newValue = prompt('Enter a new value:');
+
+        if (newValue && !isNaN(+newValue))
+            value = +newValue;
+    }
 </script>
 
 <wrapper>
     <button onclick={() => --value}>－</button>
-    <button id="value">{value}</button>
+    <button id="value" onclick={changeValue}>{value}</button>
     <button onclick={() => ++value}>＋</button>
 </wrapper>
 
