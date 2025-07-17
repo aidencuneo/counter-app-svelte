@@ -72,7 +72,7 @@
         display: flex;
         position: relative;
         justify-content: space-between;
-        padding: 12px 12px;
+        padding: 10px 12px;
         user-select: none;
         transition: box-shadow 0.1s ease-out;
         touch-action: none;

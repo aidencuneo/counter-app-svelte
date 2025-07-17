@@ -18,6 +18,8 @@
 		"vite": "^6.2.6"
 	},
 	"dependencies": {
-		"@fontsource/material-icons": "^5.2.5"
+		"@fontsource/material-icons": "^5.2.5",
+		"chart.js": "^4.5.0",
+		"regression": "^2.0.1"
 	}
 }

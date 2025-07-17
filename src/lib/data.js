@@ -49,43 +49,37 @@ export function getCount(name, day) {
     return getValues(name)[name][day] ?? 0;
 }
 
-// export function getValues(name, from, to) {
-//     from = new Date(from ?? today());
-//     to = to ? new Date(to) : undefined;
+export function gatherValues(name, from, to) {
+    from = new Date(from ?? today());
+    to = to ? new Date(to) : undefined;
 
-//     if (to > from)
-//         [from, to] = [to, from];
+    if (to > from)
+        [from, to] = [to, from];
 
-//     let values = localStorage.getItem(`counter_${name}_values`);
+    let values = getValues(name)[name];
+    let filtered = {};
 
-//     if (values)
-//         values = JSON.parse(values);
-//     else
-//         return {};
+    // Find earliest date
+    let dates = Object.keys(values);
+    dates.sort((a, b) => new Date(a) - new Date(b));
+    console.log(dates);
 
-//     let filtered = {};
+    // Set to earliest date if one was not given
+    if (!to)
+        to = new Date(dates[0]);
 
-//     // Find earliest date
-//     let dates = Object.keys(values);
-//     dates.sort((a, b) => new Date(a) - new Date(b));
+    for (let date = from; date >= to; from.setDate(date.getDate() - 1)) {
+        let dateStr = dateToStr(date);
+        filtered[dateStr] = values[dateStr] ?? 0;
+    }
 
-//     // Set to earliest date if one was not given
-//     if (!to)
-//         to = new Date(dates[0]);
+    console.log(Object.keys(values).length, '->', Object.keys(filtered).length);
 
-//     for (let date = from; date >= to; from.setDate(date.getDate() - 1)) {
-//         let dateStr = dateToStr(date);
-//         filtered[dateStr] = values[dateStr] ?? 0;
-//     }
+    // console.log(values);
+    // console.log(filtered);
 
-//     console.log(Object.keys(values).length);
-//     console.log(Object.keys(filtered).length);
-
-//     // console.log(values);
-//     // console.log(filtered);
-
-//     return filtered;
-// }
+    return filtered;
+}
 
 // export function getLastPage() {
 //     return localStorage.getItem('counter_page') ?? 'counter';
