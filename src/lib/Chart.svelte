@@ -7,7 +7,7 @@
     import { onMount } from 'svelte';
     import { addDays, addYears, today } from './dates.js';
 
-    let { name, timeMode } = $props();
+    let { name, timeMode, infoElems } = $props();
 
     let canvas = $state();
     let lastChart;
@@ -91,47 +91,46 @@
             },
         );
 
-        // // Display details
-        // let total = data.reduce((a, b) => a + b, 0);
-        // let average = total / data.length;
-        // let gradient = regression.linear(data.map((x, i) => [i, x])).equation[0];
-        // let gradientSign = gradient < 0 ? '' : '+';
+        // Display details (if the info elems have loaded)
+        if (!infoElems.total)
+            return;
 
-        // totalStatDiv.innerText = 'Total: ' + round(total, 2);
-        // averageStatDiv.innerText = 'Average: ' + round(average, 2);
-        // maxStatDiv.innerText = 'Max: ' + round(Math.max(...data), 2);
-        // gradientStatDiv.innerText = 'Gradient: ' + gradientSign + round(gradient, 2);
+        let total = values.reduce((a, b) => a + b, 0);
+        let average = total / values.length;
+        let gradient = regression.linear(values.map((x, i) => [i, x])).equation[0];
+        let gradientSign = gradient < 0 ? '' : '+';
 
-        // // Streaks
-        // let longestStreak = 0;
-        // let currentStreak = 0;
-        // let longestZeroStreak = 0;
-        // let currentZeroStreak = 0;
+        infoElems.total.innerText = 'Total: ' + round(total, 2);
+        infoElems.average.innerText = 'Average: ' + round(average, 2);
+        infoElems.max.innerText = 'Max: ' + round(Math.max(...values), 2);
+        infoElems.gradient.innerText = 'Gradient: ' + gradientSign + round(gradient, 2);
 
-        // for (let i = 0; i < data.length; ++i) {
-        //     if (data[i]) {
-        //         ++currentStreak;
-        //         longestStreak = Math.max(longestStreak, currentStreak);
-        //         currentZeroStreak = 0;
-        //     } else {
-        //         ++currentZeroStreak;
-        //         longestZeroStreak = Math.max(longestZeroStreak, currentZeroStreak);
-        //         currentStreak = 0;
-        //     }
-        // }
+        // Streaks
+        let longestStreak = 0;
+        let currentStreak = 0;
+        let longestZeroStreak = 0;
+        let currentZeroStreak = 0;
 
-        // longestStreakStatDiv.innerText = 'Longest Streak: ' + longestStreak;
-        // currentStreakStatDiv.innerText = 'Current Streak: ' + currentStreak;
-        // longestZeroStreakStatDiv.innerText = 'Longest Zero Streak: ' + longestZeroStreak;
-        // currentZeroStreakStatDiv.innerText = 'Current Zero Streak: ' + currentZeroStreak;
+        for (let i = 0; i < values.length; ++i) {
+            if (values[i]) {
+                ++currentStreak;
+                longestStreak = Math.max(longestStreak, currentStreak);
+                currentZeroStreak = 0;
+            } else {
+                ++currentZeroStreak;
+                longestZeroStreak = Math.max(longestZeroStreak, currentZeroStreak);
+                currentStreak = 0;
+            }
+        }
+
+        infoElems.longestStreak.innerText = 'Longest Streak: ' + longestStreak;
+        infoElems.currentStreak.innerText = 'Current Streak: ' + currentStreak;
+        infoElems.longestZeroStreak.innerText = 'Longest Zero Streak: ' + longestZeroStreak;
+        infoElems.currentZeroStreak.innerText = 'Current Zero Streak: ' + currentZeroStreak;
     };
 
-    onMount(() => {
-        redraw();
-    });
-
     $effect(() => {
-        name, timeMode;
+        name, timeMode, infoElems;
         redraw();
     });
 </script>

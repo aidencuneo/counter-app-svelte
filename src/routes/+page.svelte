@@ -22,6 +22,9 @@
     let timeMode = $state();
     let importFileInput = $state();
 
+    // Info elements
+    let infoElems = $state({});
+
     // Reordering counters
     let draggingIndex = $state(-1);
     let counterPositions = [];
@@ -226,26 +229,26 @@
         <option value="alltime">All time</option>
     </select>
 
-    <Chart name={statName} {timeMode} />
+    <Chart name={statName} {timeMode} {infoElems} />
 
     <div class="info-container">
-      <div id="totalStatDiv">Total: 0</div>
-      <div id="longestStreakStatDiv">Longest Streak: 0</div>
+      <div bind:this={infoElems.total}>Total: 0</div>
+      <div bind:this={infoElems.longestStreak}>Longest Streak: 0</div>
     </div>
 
     <div class="info-container">
-      <div id="averageStatDiv">Average: 0</div>
-      <div id="currentStreakStatDiv">Current Streak: 0</div>
+      <div bind:this={infoElems.average}>Average: 0</div>
+      <div bind:this={infoElems.currentStreak}>Current Streak: 0</div>
     </div>
 
     <div class="info-container">
-      <div id="maxStatDiv">Max: 0</div>
-      <div id="longestZeroStreakStatDiv">Longest Zero Streak: 0</div>
+      <div bind:this={infoElems.max}>Max: 0</div>
+      <div bind:this={infoElems.longestZeroStreak}>Longest Zero Streak: 0</div>
     </div>
 
     <div class="info-container">
-      <div id="gradientStatDiv">Gradient: +0</div>
-      <div id="currentZeroStreakStatDiv">Current Zero Streak: 0</div>
+      <div bind:this={infoElems.gradient}>Gradient: +0</div>
+      <div bind:this={infoElems.currentZeroStreak}>Current Zero Streak: 0</div>
     </div>
 
     <div class="container" style:margin-top="15px">
