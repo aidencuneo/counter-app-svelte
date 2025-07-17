@@ -81,26 +81,26 @@ export function gatherValues(name, from, to) {
     return filtered;
 }
 
-// export function getLastPage() {
-//     return localStorage.getItem('counter_page') ?? 'counter';
-// }
+export function getLastPage() {
+    return localStorage.getItem('counter_page') ?? 'counter';
+}
 
-// export function setLastPage(lastPage) {
-//     localStorage.setItem('counter_page', lastPage);
-// }
+export function setLastPage(lastPage) {
+    localStorage.setItem('counter_page', lastPage);
+}
 
-// export function getStatsOptions() {
-//     let optionsStr = localStorage.getItem('counter_stats_options');
+export function getStatsOptions() {
+    let optionsStr = localStorage.getItem('counter_stats_options');
 
-//     if (optionsStr)
-//         return JSON.parse(optionsStr);
+    if (optionsStr)
+        return JSON.parse(optionsStr);
 
-//     return [null, null];
-// }
+    return [null, null];
+}
 
-// export function setStatsOptions(options) {
-//     localStorage.setItem('counter_stats_options', JSON.stringify(options));
-// }
+export function setStatsOptions(options) {
+    localStorage.setItem('counter_stats_options', JSON.stringify(options));
+}
 
 export function exportToJSON() {
     return JSON.stringify({

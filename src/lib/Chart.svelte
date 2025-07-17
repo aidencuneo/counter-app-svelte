@@ -1,32 +1,36 @@
 <script>
-    import Chart from 'chart.js/auto';
+    import ChartJS from 'chart.js/auto';
     import regression from 'regression';
     import { round } from './util.js';
-    import { gatherValues } from './data.js';
-    import { getRandColour } from './colourUtil.js';
+    import { getRandColour } from './colourUtil';
+    import * as data from './data';
+    import { onMount } from 'svelte';
 
     let { name, timeMode } = $props();
 
     let canvas = $state();
     let lastChart;
 
-    $effect(() => {
-        name, timeMode;
+    const redraw = () => {
+        if (lastChart)
+            lastChart.destroy();
 
         if (!name)
             return;
 
-        let valuesDict = gatherValues(name);
+        let valuesDict = data.gatherValues(name);
         let labels = Object.keys(valuesDict);
 
         // Ascending order
         labels.sort((a, b) => new Date(a) - new Date(b));
         let values = labels.map(x => valuesDict[x]);
 
-        if (lastChart)
-            lastChart.destroy();
+        // Get this counter's colour
+        let counter = data.getCounters().find(c => c[0] == name);
+        let colour = counter ? counter[1] : getRandColour();
 
-        lastChart = new Chart(
+        // Draw graph
+        lastChart = new ChartJS(
             canvas,
             {
                 type: 'line',
@@ -35,7 +39,7 @@
                     datasets: [{
                         label: name,
                         data: values,
-                        // backgroundColor: getRandColour(),
+                        backgroundColor: colour,
                     }],
                 },
             },
@@ -74,15 +78,26 @@
         // currentStreakStatDiv.innerText = 'Current Streak: ' + currentStreak;
         // longestZeroStreakStatDiv.innerText = 'Longest Zero Streak: ' + longestZeroStreak;
         // currentZeroStreakStatDiv.innerText = 'Current Zero Streak: ' + currentZeroStreak;
+    };
+
+    onMount(() => {
+        redraw();
+    });
+
+    $effect(() => {
+        name, timeMode;
+        redraw();
     });
 </script>
 
 
-<div>Nothing to see here</div>
-<canvas bind:this={canvas}></canvas>
+<div>
+    <canvas bind:this={canvas}></canvas>
+</div>
 
 <style>
     canvas {
         margin-bottom: 15px;
+        margin-right: 3px;
     }
 </style>

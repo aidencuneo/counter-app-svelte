@@ -116,6 +116,14 @@
 
     onMount(() => {
         counters = data.getCounters();
+        page = data.getLastPage();
+
+        let [newStatName, newTimeMode] = data.getStatsOptions();
+
+        if (newStatName)
+            statName = newStatName;
+        if (newTimeMode)
+            timeMode = newTimeMode;
 
         window.addEventListener('mousedown', dragStart);
         window.addEventListener('touchstart', dragStart);
@@ -138,6 +146,14 @@
         let newCounters = $state.snapshot(counters);
         if (newCounters != data.getCounters())
             data.saveCounters($state.snapshot(counters));
+    });
+
+    $effect(() => {
+        data.setLastPage(page);
+    });
+
+    $effect(() => {
+        data.setStatsOptions([statName, timeMode]);
     });
 </script>
 
