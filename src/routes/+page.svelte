@@ -48,6 +48,17 @@
             return;
         }
 
+        // Renaming counters
+        let nameNow = counters[index][0];
+
+        if (nameNow != name) {
+            let values = data.getValues();
+            values[name] = values[nameNow];
+            delete values[nameNow];
+            data.setValues(values);
+        }
+
+        // Set new counter info
         colour ??= counters[index][1];
         counters[index] = [name, colour];
     }

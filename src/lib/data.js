@@ -1,5 +1,11 @@
 import { today, dateToStr } from './dates';
 
+export function parseJSON(json) {
+    try {
+        return JSON.parse(json);
+    } catch (e) {}
+}
+
 export function saveCounters(counters) {
     localStorage.setItem('counter_counters', JSON.stringify(counters));
 }
@@ -9,7 +15,7 @@ export function getCounters() {
     if (localStorage.getItem('counter_counters') && !localStorage.getItem('counter_values'))
         transferData();
 
-    return JSON.parse(localStorage.getItem('counter_counters') ?? '[]');
+    return parseJSON(localStorage.getItem('counter_counters') ?? '[]');
 }
 
 function transferData() {
@@ -21,11 +27,11 @@ function transferData() {
             IDValues[k.substring(8, k.length - 7)] = localStorage.getItem(k);
     }
 
-    let counters = JSON.parse(localStorage.getItem('counter_counters') ?? '[]');
+    let counters = parseJSON(localStorage.getItem('counter_counters') ?? '[]');
     let values = {};
 
     for (let i = 0; i < counters.length; ++i)
-        values[counters[i][0]] = JSON.parse(IDValues[counters[i][0].toLowerCase()]);
+        values[counters[i][0]] = parseJSON(IDValues[counters[i][0].toLowerCase()]);
 
     saveValues(values);
 }
@@ -35,7 +41,7 @@ export function saveValues(values) {
 }
 
 export function getValues(ensure_counter) {
-    let values = JSON.parse(localStorage.getItem('counter_values') ?? '{}');
+    let values = parseJSON(localStorage.getItem('counter_values') ?? '{}');
 
     if (ensure_counter && !values[ensure_counter])
         values[ensure_counter] = {};
@@ -110,7 +116,7 @@ export function getStatsOptions() {
     let optionsStr = localStorage.getItem('counter_stats_options');
 
     if (optionsStr)
-        return JSON.parse(optionsStr);
+        return parseJSON(optionsStr);
 
     return [null, null];
 }
@@ -127,7 +133,7 @@ export function exportToJSON() {
 }
 
 export function importFromJSON(json) {
-    const data = JSON.parse(json);
+    const data = parseJSON(json);
     saveCounters(data.counters);
     saveValues(data.values);
 }
