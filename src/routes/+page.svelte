@@ -233,22 +233,22 @@
 
     <div class="info-container">
       <div bind:this={infoElems.total}>Total: 0</div>
-      <div bind:this={infoElems.longestStreak}>Longest Streak: 0</div>
-    </div>
-
-    <div class="info-container">
-      <div bind:this={infoElems.average}>Average: 0</div>
       <div bind:this={infoElems.currentStreak}>Current Streak: 0</div>
     </div>
 
     <div class="info-container">
+      <div bind:this={infoElems.average}>Average: 0</div>
+      <div bind:this={infoElems.longestStreak}>Longest Streak: 0</div>
+    </div>
+
+    <div class="info-container">
       <div bind:this={infoElems.max}>Max: 0</div>
-      <div bind:this={infoElems.longestZeroStreak}>Longest Zero Streak: 0</div>
+      <div bind:this={infoElems.currentZeroStreak}>Current Zero Streak: 0</div>
     </div>
 
     <div class="info-container">
       <div bind:this={infoElems.gradient}>Gradient: +0</div>
-      <div bind:this={infoElems.currentZeroStreak}>Current Zero Streak: 0</div>
+      <div bind:this={infoElems.longestZeroStreak}>Longest Zero Streak: 0</div>
     </div>
 
     <div class="container" style:margin-top="15px">
