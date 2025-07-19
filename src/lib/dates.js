@@ -33,3 +33,12 @@ export function getDaysInMonth(year, month) {
             : [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
     )[month - 1];
 }
+
+export function timeToNum(time) {
+    let segments = time.split(':');
+
+    if (segments.length == 3)
+        return parseInt(segments[0]) * 60 + parseInt(segments[1]) + parseInt(segments[2]) / 60;
+    else if (segments.length == 2)
+        return parseInt(segments[0]) + parseInt(segments[1]) / 60;
+}

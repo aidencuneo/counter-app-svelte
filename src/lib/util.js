@@ -3,3 +3,6 @@ export const round = (n, prec) =>
 
 export const formatPerc = (n, prec) =>
     round(100 * n, prec) + '%';
+
+export const asID = s =>
+    s.replace(/ /g, '_').replace(/[^_a-zA-Z]/g, '');

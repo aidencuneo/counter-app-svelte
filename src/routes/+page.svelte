@@ -55,7 +55,7 @@
             let values = data.getValues();
             values[name] = values[nameNow];
             delete values[nameNow];
-            data.setValues(values);
+            data.saveValues(values);
         }
 
         // Set new counter info
@@ -82,8 +82,6 @@
             if (clientY > y)
                 draggingIndex = i;
         }
-
-        log = draggingIndex + ', ' + counterPositions;
     }
 
     const dragging = e => {
@@ -196,6 +194,11 @@
     $effect(() => {
         data.setStatsOptions([statName, timeMode]);
     });
+
+    $effect(() => {
+        document.body.style.overflow = draggingIndex > -1 ? 'hidden' : 'auto';
+        document.body.style.touchAction = draggingIndex > -1 ? 'none' : 'auto';
+    });
 </script>
 
 <Header bind:page />
@@ -204,6 +207,7 @@
     <DateSelector bind:selectedDate />
     {#each counters as c, index (c)}
         <Counter
+            notouch={draggingIndex > -1}
             name={c[0]} bg={c[1]}
             date={selectedDate}
             isDragging={index == draggingIndex}
@@ -243,23 +247,23 @@
     <Chart name={statName} {timeMode} {infoElems} />
 
     <div class="info-container">
-      <div bind:this={infoElems.total}>Total: 0</div>
-      <div bind:this={infoElems.currentStreak}>Current Streak: 0</div>
+    <div bind:this={infoElems.total}>Total: 0</div>
+    <div bind:this={infoElems.currentStreak}>Current Streak: 0</div>
     </div>
 
     <div class="info-container">
-      <div bind:this={infoElems.average}>Average: 0</div>
-      <div bind:this={infoElems.longestStreak}>Longest Streak: 0</div>
+    <div bind:this={infoElems.average}>Average: 0</div>
+    <div bind:this={infoElems.longestStreak}>Longest Streak: 0</div>
     </div>
 
     <div class="info-container">
-      <div bind:this={infoElems.max}>Max: 0</div>
-      <div bind:this={infoElems.currentZeroStreak}>Current Zero Streak: 0</div>
+    <div bind:this={infoElems.max}>Max: 0</div>
+    <div bind:this={infoElems.currentZeroStreak}>Current Zero Streak: 0</div>
     </div>
 
     <div class="info-container">
-      <div bind:this={infoElems.gradient}>Gradient: +0</div>
-      <div bind:this={infoElems.longestZeroStreak}>Longest Zero Streak: 0</div>
+    <div bind:this={infoElems.gradient}>Gradient: +0</div>
+    <div bind:this={infoElems.longestZeroStreak}>Longest Zero Streak: 0</div>
     </div>
 
     <div class="container" style:margin-top="15px">

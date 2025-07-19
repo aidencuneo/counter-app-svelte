@@ -12,7 +12,7 @@
     let value = $state(0);
 
     const renameCounter = () => {
-        const newName = (prompt('Enter a new name for this counter:') ?? '').trim();
+        const newName = (prompt('Enter a new name for this counter:', name) ?? '').trim();
 
         if (!newName || getCounters().findIndex(c => c[0] == newName) > 0)
             return;
@@ -63,7 +63,7 @@
         <span onclick={renameCounter}>{name}</span>
     </div>
 
-    <CounterValue bind:value />
+    <CounterValue bind:value {date} />
 </counter>
 
 <style>
@@ -74,8 +74,6 @@
         padding: 10px 9px 10px 0px;
         user-select: none;
         transition: box-shadow 0.1s ease-out;
-        touch-action: none;
-        -ms-touch-action: none;
     }
 
     div {
