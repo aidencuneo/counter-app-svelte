@@ -31,7 +31,7 @@
 
         if (!isNaN(+newValue))
             value = +newValue;
-        else if (calculated !== undefined)
+        else if (!isNaN(calculated))
             value = calculated;
         else if (time)
             value = time;
