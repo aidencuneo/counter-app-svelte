@@ -10,6 +10,7 @@
     let { name, bg, date, isDragging, setInfo, getCounters, setCounters } = $props();
 
     let value = $state(0);
+    let expanded = $state(false);
 
     const renameCounter = () => {
         const newName = (prompt('Enter a new name for this counter:', name) ?? '').trim();
@@ -44,36 +45,48 @@
         z-index: {isDragging ? 1 : 0};
     ">
     <div>
-        <Icon id='drag-btn' padding='0 5px 0 12px'>
+        <Icon id='drag-btn' padding='12px 2px 12px 9px'>
             drag_indicator
         </Icon>
 
-        <Icon padding='0 5px 0 0'
+        <Icon padding='12px 2px 12px 2px'
             onclick={() => confirm(`Are you sure you want to delete "${name}"?`) && setInfo()}
         >
             delete
         </Icon>
 
-        <Icon padding='0 10px 0 0'
+        <Icon padding='12px 12px 12px 2px'
             onclick={() => setInfo(name, getRandColour())}
         >
             refresh
         </Icon>
 
+        <!-- <Icon padding='12px 9px 12px 2px'
+            onclick={() => expanded = !expanded}
+        >
+            expand_{expanded ? 'less' : 'more'}
+        </Icon> -->
+
         <span onclick={renameCounter}>{name}</span>
     </div>
 
-    <CounterValue bind:value {date} />
+    <CounterValue bind:value {date} style="padding: 0 6px 0 3px" />
 </counter>
+
+{#if expanded}
+    <space>
+        
+    </space>
+{/if}
 
 <style>
     counter {
         display: flex;
         position: relative;
         justify-content: space-between;
-        padding: 10px 9px 10px 0px;
         user-select: none;
         transition: box-shadow 0.1s ease-out;
+        font-size: 18px;
     }
 
     div {
@@ -83,5 +96,10 @@
 
     span {
         padding-bottom: 3px;
+    }
+
+    space {
+        display: block;
+        height: 40px;
     }
 </style>

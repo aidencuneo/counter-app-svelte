@@ -7,6 +7,7 @@
     import { today } from '$lib/dates';
     import DateSelector from '$lib/DateSelector.svelte';
     import Header from '$lib/Header.svelte';
+    import Icon from '$lib/Icon.svelte';
     import XSpacer from '$lib/XSpacer.svelte';
     import { onMount } from 'svelte';
 
@@ -217,7 +218,7 @@
     <Button bg='#25dc7b' onclick={addCounter}>Add Counter</Button>
 {:else if page == 'stats'}
     {#snippet counterOptions()}
-        <option value="">-- none --</option>
+        <!-- <option value="">-- none --</option> -->
         {#each counters as [name, colour]}
             <option value={name}>{name}</option>
         {/each}

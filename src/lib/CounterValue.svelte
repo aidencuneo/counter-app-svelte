@@ -3,7 +3,7 @@
     import { asID, round } from './util';
     import * as data from './data';
 
-    let { value = $bindable(), date } = $props();
+    let { value = $bindable(), date, style } = $props();
 
     const changeValue = () => {
         const newValue = prompt('Enter a new value:', value);
@@ -38,7 +38,7 @@
     }
 </script>
 
-<wrapper>
+<wrapper style={style}>
     <button onclick={() => --value}>－</button>
     <button id="value" onclick={changeValue}>{round(value, 2)}</button>
     <button onclick={() => ++value}>＋</button>
@@ -50,7 +50,7 @@
         flex-direction: row;
         font-weight: bold;
         text-align: center;
-        font-size: 22px;
+        font-size: 20px;
     }
 
     button {
@@ -59,6 +59,7 @@
         background: inherit;
         border: none;
         padding-left: 5px;
+        margin-bottom: 3px;
     }
 
     #value {

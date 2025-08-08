@@ -1,10 +1,10 @@
 <script>
     import '@fontsource/material-icons';
 
-    export let children, padding = '0';
+    let { children, padding = '0', ...props } = $props();
 </script>
 
-<span {...$$restProps} style="padding: {padding}">
+<span {...props} style:padding={padding}>
     {@render children?.()}
 </span>
 
