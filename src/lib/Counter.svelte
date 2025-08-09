@@ -6,20 +6,24 @@
     import * as data from './data';
     import { onMount } from 'svelte';
     import { today } from './dates';
+    import CounterSettingsWindow from './windows/CounterSettingsWindow.svelte';
 
     let { name, bg, date, isDragging, setInfo, getCounters, setCounters } = $props();
 
     let value = $state(0);
     let expanded = $state(false);
+    let settingsOpen = $state(false);
 
     const renameCounter = () => {
-        const newName = (prompt('Enter a new name for this counter:', name) ?? '').trim();
+        settingsOpen = true;
 
-        if (!newName || getCounters().findIndex(c => c[0] == newName) > 0)
-            return;
+        // const newName = (prompt('Enter a new name for this counter:', name) ?? '').trim();
 
-        setInfo(newName);
-        setCounters(getCounters());
+        // if (!newName || getCounters().findIndex(c => c[0] == newName) > 0)
+        //     return;
+
+        // setInfo(newName);
+        // setCounters(getCounters());
     }
 
     onMount(() => {
@@ -77,6 +81,13 @@
     <space>
         
     </space>
+{/if}
+
+{#if settingsOpen}
+    <CounterSettingsWindow
+        {name} {bg} {setInfo}
+        onHide={() => settingsOpen = false}
+    />
 {/if}
 
 <style>
