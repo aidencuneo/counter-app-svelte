@@ -20,7 +20,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: rgba(18, 18, 18, 0.25);
+        background: rgba(18, 18, 18, 0.25);
         color: #eeeeee;
         z-index: 2;
     }

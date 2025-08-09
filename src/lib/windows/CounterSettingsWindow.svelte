@@ -5,13 +5,18 @@
     import Icon from '$lib/Icon.svelte';
     import Window from './Window.svelte';
 
-    let { name, bg, setInfo, ...props } = $props();
+    let { name, bg, setInfo, onHide, ...props } = $props();
 
     let curName = $state(props.name);
     let curBg = $state(props.bg);
+
+    const hideAndSave = () => {
+        onHide();
+        setInfo(curName, curBg);
+    }
 </script>
 
-<Window {...props}>
+<Window {...props} onHide={hideAndSave}>
     <row style:background-color={bg} style:color={'#' + getLightOrDark(bg.substring(1))}>
         <middle>Settings: "{name}"</middle>
     </row>
