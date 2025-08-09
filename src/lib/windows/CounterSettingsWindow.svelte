@@ -50,9 +50,9 @@
 
     left {
         padding: 10px 0;
-        width: 50%;
+        width: 150px;
         text-align: right;
-        padding-right: 24px;
+        padding-right: 18px;
         user-select: none;
     }
 
@@ -64,10 +64,7 @@
         background: #a9d4ff;
         color: #121212;
         height: 100%;
-        /* width: 100%; */
-    }
-
-    button {
-        /* width: 100%; */
+        width: 100%;
+        padding: 0 9px;
     }
 </style>
