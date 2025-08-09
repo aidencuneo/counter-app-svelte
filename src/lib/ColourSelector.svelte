@@ -29,8 +29,9 @@
     }
 
     span {
+        min-width: 40px;
+        max-width: 40px;
         height: 100%;
-        width: 60px;
         align-self: center;
         display: flex;
         justify-content: center;

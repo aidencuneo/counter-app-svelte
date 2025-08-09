@@ -2,6 +2,7 @@
     import { timeToNum } from './dates';
     import { asID, round } from './util';
     import * as data from './data';
+    import Icon from './Icon.svelte';
 
     let { value = $bindable(), date, style } = $props();
 
@@ -38,10 +39,14 @@
     }
 </script>
 
-<wrapper style={style}>
-    <button onclick={() => --value}>－</button>
+<wrapper {style}>
+    <button onclick={() => --value}>
+        <Icon style="font-weight: bold;">remove</Icon>
+    </button>
     <button id="value" onclick={changeValue}>{round(value, 2)}</button>
-    <button onclick={() => ++value}>＋</button>
+    <button onclick={() => ++value}>
+        <Icon style="font-weight: bold;">add</Icon>
+    </button>
 </wrapper>
 
 <style>
@@ -58,8 +63,7 @@
         color: inherit;
         background: inherit;
         border: none;
-        padding-left: 5px;
-        margin-bottom: 3px;
+        padding: 6px;
     }
 
     #value {

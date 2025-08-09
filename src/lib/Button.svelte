@@ -9,7 +9,7 @@
     {...props}
     style:background={bg}
     style:color={'#' + getLightOrDark(bg.substring(1))}
-    style:padding={(padding ?? 15) + 'px'}
+    style:padding={(padding ?? 12) + 'px'}
 >
     {@render children?.()}
 </button>

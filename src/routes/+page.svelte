@@ -34,12 +34,14 @@
     const setPage = p => page = p;
 
     const addCounter = () => {
-        const name = (prompt('Enter a name:') ?? '').trim();
+        counters.push(['Counter ' + (counters.length + 1), getRandColour()]);
 
-        if (!name)
-            return;
+        // const name = (prompt('Enter a name:') ?? '').trim();
 
-        counters.push([name, getRandColour()]);
+        // if (!name)
+        //     return;
+
+        // counters.push([name, getRandColour()]);
     }
 
     const updateCounter = (index, name, colour) => {
@@ -48,6 +50,9 @@
             counters.splice(index, 1);
             return;
         }
+
+        // Trim after
+        name = name.trim();
 
         // Renaming counters
         let nameNow = counters[index][0];
@@ -215,7 +220,9 @@
             setInfo={(name, colour) => updateCounter(index, name, colour)}
             {getCounters} {setCounters} />
     {/each}
-    <Button bg='#25dc7b' onclick={addCounter}>Add Counter</Button>
+    <Button bg='#25dc7b' onclick={addCounter}>
+        <Icon style="font-weight: bold;">add</Icon>
+    </Button>
 {:else if page == 'stats'}
     {#snippet counterOptions()}
         <!-- <option value="">-- none --</option> -->

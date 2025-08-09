@@ -28,8 +28,9 @@
     inner {
         min-height: 100px;
         min-width: 100px;
-        width: 80vw;
-        /* padding: 9px; */
+        width: 85vw;
+        max-height: 85vh;
+        margin-bottom: 100px;
         display: flex;
         flex-direction: column;
         justify-content: center;

@@ -14,17 +14,15 @@
     let expanded = $state(false);
     let settingsOpen = $state(false);
 
-    const renameCounter = () => {
-        settingsOpen = true;
+    // const renameCounter = () => {
+    //     const newName = (prompt('Enter a new name for this counter:', name) ?? '').trim();
 
-        // const newName = (prompt('Enter a new name for this counter:', name) ?? '').trim();
+    //     if (!newName || getCounters().findIndex(c => c[0] == newName) > 0)
+    //         return;
 
-        // if (!newName || getCounters().findIndex(c => c[0] == newName) > 0)
-        //     return;
-
-        // setInfo(newName);
-        // setCounters(getCounters());
-    }
+    //     setInfo(newName);
+    //     setCounters(getCounters());
+    // }
 
     onMount(() => {
         value = data.getCount(name, date);
@@ -49,21 +47,21 @@
         z-index: {isDragging ? 1 : 0};
     ">
     <div>
-        <Icon id='drag-btn' padding='12px 2px 12px 9px'>
+        <Icon id='drag-btn' padding='12px 12px 12px 9px'>
             drag_indicator
         </Icon>
 
-        <Icon padding='12px 2px 12px 2px'
+        <!-- <Icon padding='12px 2px 12px 2px'
             onclick={() => confirm(`Are you sure you want to delete "${name}"?`) && setInfo()}
         >
             delete
-        </Icon>
+        </Icon> -->
 
-        <Icon padding='12px 12px 12px 2px'
+        <!-- <Icon padding='12px 2px 12px 2px'
             onclick={() => setInfo(name, getRandColour())}
         >
             refresh
-        </Icon>
+        </Icon> -->
 
         <!-- <Icon padding='12px 9px 12px 2px'
             onclick={() => expanded = !expanded}
@@ -71,7 +69,7 @@
             expand_{expanded ? 'less' : 'more'}
         </Icon> -->
 
-        <span onclick={renameCounter}>{name}</span>
+        <span onclick={() => settingsOpen = true}>{name}</span>
     </div>
 
     <CounterValue bind:value {date} style="padding: 0 6px 0 3px" />
@@ -106,7 +104,8 @@
     }
 
     span {
-        padding-bottom: 3px;
+        padding-top: 6px;
+        padding-bottom: 9px; /* 3 more than top */
     }
 
     space {

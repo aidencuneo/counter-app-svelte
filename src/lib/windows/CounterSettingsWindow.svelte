@@ -12,18 +12,30 @@
 
     const hideAndSave = () => {
         onHide();
+
+        // Don't save a blank name
+        if (!curName)
+            return;
+
         setInfo(curName, curBg);
     }
 </script>
 
 <Window {...props} onHide={hideAndSave}>
-    <row style:background-color={bg} style:color={'#' + getLightOrDark(bg.substring(1))}>
-        <middle>Settings: "{name}"</middle>
+    <row style:background={bg} style:color={'#' + getLightOrDark(bg.substring(1))}>
+        <middle style="overflow: ellipsis">{name}</middle>
     </row>
     <row>
         <left>Name</left>
-        <right>
+        <right class="flex">
             <input type="text" id="name" bind:value={curName}>
+            <!-- svelte-ignore a11y_click_events_have_key_events -->
+            <!-- svelte-ignore a11y_no_static_element_interactions -->
+            <icon-wrapper
+                onclick={() => confirm(`Are you sure you want to delete "${name}"?`) && setInfo()}
+            >
+                <Icon>delete</Icon>
+            </icon-wrapper>
         </right>
     </row>
     <row>
@@ -31,6 +43,15 @@
         <right>
             <ColourSelector bind:colour={curBg} />
         </right>
+    </row>
+    <row>
+        <Button bg="#ef3535" padding="9px 0" onclick={onHide}>
+            Cancel
+        </Button>
+
+        <Button bg="#25dc7b" padding="0px 0" onclick={hideAndSave}>
+            Save
+        </Button>
     </row>
 </Window>
 
@@ -44,9 +65,12 @@
 
     middle {
         display: block;
-        text-align: center;
-        padding: 10px 0;
+        padding: 10px 18px;
         user-select: none;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-wrap: nowrap;
     }
 
     left, right {
@@ -55,7 +79,7 @@
 
     left {
         padding: 10px 0;
-        width: 150px;
+        width: 100px;
         text-align: right;
         padding-right: 18px;
         user-select: none;
@@ -63,6 +87,21 @@
 
     right {
         width: 100%;
+    }
+
+    .flex {
+        display: flex;
+    }
+
+    icon-wrapper {
+        min-width: 40px;
+        max-width: 40px;
+        height: 100%;
+        align-self: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
     }
 
     input {
