@@ -20,6 +20,7 @@
 	"dependencies": {
 		"@fontsource/material-icons": "^5.2.5",
 		"chart.js": "^4.5.0",
-		"regression": "^2.0.1"
+		"regression": "^2.0.1",
+		"svelte-awesome-color-picker": "^4.0.2"
 	}
 }

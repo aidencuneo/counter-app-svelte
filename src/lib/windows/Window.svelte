@@ -16,11 +16,11 @@
         top: 0;
         left: 0;
         width: 100vw;
-        height: 100vh;
+        height: 100dvh;
         display: flex;
         justify-content: center;
         align-items: center;
-        background: rgba(18, 18, 18, 0.25);
+        background: rgba(18, 18, 18, 0.4);
         color: #eeeeee;
         z-index: 2;
     }
@@ -37,8 +37,8 @@
         align-items: center;
         background-color: #121212;
         color: #eeeeee;
-        border-radius: 6px;
+        /* border-radius: 6px; */
         box-shadow: 0 0 10px #121212;
-        overflow: hidden;
+        /* overflow: hidden; */
     }
 </style>

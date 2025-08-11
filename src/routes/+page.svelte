@@ -202,28 +202,35 @@
     });
 
     $effect(() => {
-        document.body.style.overflow = draggingIndex > -1 ? 'hidden' : 'auto';
+        // document.body.style.overflow = draggingIndex > -1 ? 'hidden' : 'none';
+        // counterPageContainer.style.overflow = draggingIndex > -1 ? 'hidden' : 'none';
         document.body.style.touchAction = draggingIndex > -1 ? 'none' : 'auto';
+        document.body.style.overscrollBehavior = draggingIndex > -1 ? 'none' : '';
     });
 </script>
 
-<Header bind:page />
-
 {#if page == 'counters'}
-    <DateSelector bind:selectedDate />
-    {#each counters as c, index (c)}
-        <Counter
-            notouch={draggingIndex > -1}
-            name={c[0]} bg={c[1]}
-            date={selectedDate}
-            isDragging={index == draggingIndex}
-            setInfo={(name, colour) => updateCounter(index, name, colour)}
-            {getCounters} {setCounters} />
-    {/each}
-    <Button bg='#25dc7b' onclick={addCounter}>
-        <Icon style="font-weight: bold;">add</Icon>
-    </Button>
+    <div id="counter-page-container">
+        <Header bind:page />
+        <DateSelector bind:selectedDate />
+        <div class="counter-content" style:overflow={draggingIndex > -1 ? 'hidden' : 'auto'}>
+            {#each counters as c, index (c)}
+                <Counter
+                    notouch={draggingIndex > -1}
+                    name={c[0]} bg={c[1]}
+                    date={selectedDate}
+                    isDragging={index == draggingIndex}
+                    setInfo={(name, colour) => updateCounter(index, name, colour)}
+                    {getCounters} {setCounters} />
+            {/each}
+            <Button bg='#25dc7b' onclick={addCounter}>
+                <Icon style="font-weight: bold;">add</Icon>
+            </Button>
+        </div>
+    </div>
 {:else if page == 'stats'}
+    <Header bind:page />
+
     {#snippet counterOptions()}
         <!-- <option value="">-- none --</option> -->
         {#each counters as [name, colour]}
@@ -231,7 +238,7 @@
         {/each}
     {/snippet}
 
-    <div class="container">
+    <div class="row-container">
         <select bind:value={statName}>{@render counterOptions()}</select>
         <!-- <select bind:value={statNames[1]}>{@render counterOptions()}</select> -->
     </div>
@@ -274,7 +281,7 @@
     <div bind:this={infoElems.longestZeroStreak}>Longest Zero Streak: 0</div>
     </div>
 
-    <div class="container" style:margin-top="15px">
+    <div class="row-container" style:margin-top="15px">
         <input bind:this={importFileInput} type="file" accept="application/json" style="display: none" onchange={importData}>
         <Button bg="#a9d4ff" onclick={importPrompt}>Import Data</Button>
         <Button bg="#25dc7b" onclick={exportData}>Export Data</Button>
@@ -289,9 +296,20 @@
         padding: 5px 30px;
     }
 
-    .container {
+    .row-container {
         display: flex;
         flex-direction: row;
         justify-content: center;
+    }
+
+    #counter-page-container {
+        display: flex;
+        flex-direction: column;
+        height: 100dvh;
+    }
+
+    .counter-content {
+        flex-grow: 1;
+        overflow-y: auto;
     }
 </style>

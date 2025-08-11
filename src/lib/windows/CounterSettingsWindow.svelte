@@ -22,8 +22,8 @@
 </script>
 
 <Window {...props} onHide={hideAndSave}>
-    <row style:background={bg} style:color={'#' + getLightOrDark(bg.substring(1))}>
-        <middle style="overflow: ellipsis">{name}</middle>
+    <row style:background={curBg} style:color={'#' + getLightOrDark(curBg.substring(1))}>
+        <middle style="overflow: ellipsis">{curName}</middle>
     </row>
     <row>
         <left>Name</left>
