@@ -27,6 +27,7 @@
             --picker-z-index="10"
             --focus-color="green"
             --cp-input-color="#121212"
+            label="Choose a colour"
         />
     </span>
 
@@ -41,6 +42,7 @@
     div {
         display: flex;
         height: 100%;
+        width: 100%;
     }
 
     div * {
@@ -48,13 +50,13 @@
     }
 
     span.colour-picker {
-        padding-top: 3px;
-        /* opacity: 0; */
+        padding: 9px 0 9px 9px;
+        width: 100%;
     }
 
     span.icon {
-        min-width: 40px;
-        max-width: 40px;
+        min-width: 50px;
+        max-width: 50px;
         height: 100%;
         align-self: center;
         display: flex;

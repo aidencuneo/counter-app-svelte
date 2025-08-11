@@ -23,11 +23,11 @@
 
 <Window {...props} onHide={hideAndSave}>
     <row style:background={curBg} style:color={'#' + getLightOrDark(curBg.substring(1))}>
-        <middle style="overflow: ellipsis">{curName}</middle>
+        <middle>Counter Settings</middle>
     </row>
     <row>
-        <left>Name</left>
-        <right class="flex">
+        <!-- <left>Name</left> -->
+        <right>
             <input type="text" id="name" bind:value={curName}>
             <!-- svelte-ignore a11y_click_events_have_key_events -->
             <!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -39,8 +39,8 @@
         </right>
     </row>
     <row>
-        <left>Colour</left>
-        <right>
+        <!-- <left>Colour</left> -->
+        <right class="colour-selector-wrapper">
             <ColourSelector bind:colour={curBg} />
         </right>
     </row>
@@ -58,44 +58,30 @@
 <style>
     row {
         width: 100%;
+        /* height: 50px; */
         display: flex;
-        justify-content: space-evenly;
-        /* text-align: right; */
+        /* justify-content: space-evenly; */
     }
 
     middle {
         display: block;
-        padding: 10px 18px;
+        padding: 10px 15px;
         user-select: none;
         width: 100%;
         overflow: hidden;
         text-overflow: ellipsis;
         text-wrap: nowrap;
-    }
-
-    left, right {
-        display: block;
-    }
-
-    left {
-        padding: 10px 0;
-        width: 100px;
-        text-align: right;
-        padding-right: 18px;
-        user-select: none;
+        text-align: center;
     }
 
     right {
+        display: flex;
         width: 100%;
     }
 
-    .flex {
-        display: flex;
-    }
-
     icon-wrapper {
-        min-width: 40px;
-        max-width: 40px;
+        min-width: 50px;
+        max-width: 50px;
         height: 100%;
         align-self: center;
         display: flex;
@@ -107,8 +93,7 @@
     input {
         background: #a9d4ff;
         color: #121212;
-        height: 100%;
         width: 100%;
-        padding: 0 9px;
+        padding: 10px 12px;
     }
 </style>

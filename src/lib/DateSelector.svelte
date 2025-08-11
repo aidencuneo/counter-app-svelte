@@ -4,7 +4,7 @@
     import Button from "./Button.svelte";
     import Icon from "./Icon.svelte";
 
-    let { selectedDate = $bindable() } = $props();
+    let { selectedDate = $bindable(), hasButtons = true } = $props();
 
     let year = $state();
     let month = $state();
@@ -23,7 +23,7 @@
     const prevDay = () => changeDate(new Date(addDays(selectedDate, -1)));
     const nextDay = () => changeDate(new Date(addDays(selectedDate, 1)))
 
-    onMount(() => changeDate(new Date()));
+    onMount(() => changeDate(new Date(selectedDate)));
 
     $effect(() => {
         // Update selector options
@@ -64,17 +64,21 @@
 </script>
 
 <div>
-    <Button bg="#a9d4ff" padding="" onclick={prevDay}>
-        <Icon style="font-size: 28px; margin-top: 3px;">chevron_left</Icon>
-    </Button>
+    {#if hasButtons}
+        <Button bg="#a9d4ff" padding="" onclick={prevDay}>
+            <Icon style="font-size: 140%; margin-top: 3px;">chevron_left</Icon>
+        </Button>
+    {/if}
 
     <select bind:this={yearSelector} bind:value={year}></select>
     <select bind:this={monthSelector} bind:value={month}></select>
     <select bind:this={daySelector} bind:value={day}></select>
 
-    <Button bg="#a9d4ff" padding="" onclick={nextDay}>
-        <Icon style="font-size: 28px; margin-top: 3px;">chevron_right</Icon>
-    </Button>
+    {#if hasButtons}
+        <Button bg="#a9d4ff" padding="" onclick={nextDay}>
+            <Icon style="font-size: 140%; margin-top: 3px;">chevron_right</Icon>
+        </Button>
+    {/if}
 </div>
 
 <style>
@@ -85,6 +89,6 @@
     select {
         text-align: center;
         text-align-last: center;
-        font-size: 22px;
+        padding: 12px 3px;
     }
 </style>

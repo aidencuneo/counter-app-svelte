@@ -7,12 +7,15 @@
     import { onMount } from 'svelte';
     import { addDays, addYears, today } from './dates.js';
 
-    let { name, timeMode, infoElems } = $props();
+    let { name, startDate, endDate, timeMode, infoElems } = $props();
 
     let canvas = $state();
     let lastChart;
 
     const getDateRange = () => {
+        if (startDate)
+            return [startDate, endDate ?? today()];
+
         let from = today();
         let to = from;
 
@@ -92,20 +95,16 @@
         );
 
         // Display details (if the info elems have loaded)
-        if (!infoElems.total)
+        if (!infoElems.sum)
             return;
 
-        let total = values.reduce((a, b) => a + b, 0);
-        let average = total / values.length;
+        let sum = values.reduce((a, b) => a + b, 0);
+        let average = sum / values.length;
         let gradient = regression.linear(values.map((x, i) => [i, x])).equation[0];
         let gradientSign = gradient < 0 ? '' : '+';
 
-        infoElems.total.innerText = 'Total: ' + round(total, 2);
-        infoElems.average.innerText = 'Average: ' + round(average, 2);
-        infoElems.max.innerText = 'Max: ' + round(Math.max(...values), 2);
-        infoElems.gradient.innerText = 'Gradient: ' + gradientSign + round(gradient, 2);
-
         // Streaks
+        let nonZeroCount = 0;
         let longestStreak = 0;
         let currentStreak = 0;
         let longestZeroStreak = 0;
@@ -116,6 +115,8 @@
                 ++currentStreak;
                 longestStreak = Math.max(longestStreak, currentStreak);
                 currentZeroStreak = 0;
+
+                ++nonZeroCount;
             } else {
                 ++currentZeroStreak;
                 longestZeroStreak = Math.max(longestZeroStreak, currentZeroStreak);
@@ -123,14 +124,23 @@
             }
         }
 
-        infoElems.longestStreak.innerText = 'Longest Streak: ' + longestStreak;
-        infoElems.currentStreak.innerText = 'Current Streak: ' + currentStreak;
-        infoElems.longestZeroStreak.innerText = 'Longest Zero Streak: ' + longestZeroStreak;
-        infoElems.currentZeroStreak.innerText = 'Current Zero Streak: ' + currentZeroStreak;
+        // Display all info
+        infoElems.count.innerText = `Count: ${values.length} (${nonZeroCount})`;
+        infoElems.count.innerHTML = `Count: ${values.length} (${nonZeroCount})`;
+        infoElems.sum.innerHTML = `Sum: ${round(sum, 2)}`;
+        infoElems.max.innerHTML = `Max: ${round(Math.max(...values), 2)}`;
+        infoElems.average.innerHTML = `Average: ${round(average, 2)}`;
+        infoElems.nonZeroAverage.innerHTML = `Non-Zero Average: ${round(sum / nonZeroCount, 2)}`;
+
+        infoElems.longestStreak.innerHTML = `Longest Streak: ${longestStreak}`;
+        infoElems.currentStreak.innerHTML = `Current Streak: ${currentStreak}`;
+        infoElems.longestZeroStreak.innerHTML = `Longest Zero Streak: ${longestZeroStreak}`;
+        infoElems.currentZeroStreak.innerHTML = `Current Zero Streak: ${currentZeroStreak}`;
+        infoElems.gradient.innerHTML = `Gradient: ${gradientSign}${round(gradient, 4)}`;
     };
 
     $effect(() => {
-        name, timeMode, infoElems;
+        name, startDate, endDate, timeMode, infoElems;
         redraw();
     });
 </script>

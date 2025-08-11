@@ -125,6 +125,14 @@ export function setStatsOptions(options) {
     localStorage.setItem('counter_stats_options', JSON.stringify(options));
 }
 
+export function getCustomDates() {
+    return parseJSON(localStorage.getItem('counter_custom_dates') || '[]');
+}
+
+export function setCustomDates(dates) {
+    localStorage.setItem('counter_custom_dates', JSON.stringify(dates));
+}
+
 export function exportToJSON() {
     return JSON.stringify({
         counters: getCounters(),

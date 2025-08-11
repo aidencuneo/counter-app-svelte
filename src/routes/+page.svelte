@@ -4,7 +4,7 @@
     import { getRandColour } from '$lib/colourUtil';
     import Counter from '$lib/Counter.svelte';
     import * as data from '$lib/data';
-    import { today } from '$lib/dates';
+    import { addMonths, today } from '$lib/dates';
     import DateSelector from '$lib/DateSelector.svelte';
     import Header from '$lib/Header.svelte';
     import Icon from '$lib/Icon.svelte';
@@ -16,7 +16,9 @@
 
     // Selected date
     let selectedDate = $state(today());
-    $inspect(selectedDate);
+    let customStartDate = $state(addMonths(today(), -1));
+    let customEndDate = $state(today());
+    $inspect(customStartDate);
 
     // Stats page
     let statName = $state();
@@ -152,9 +154,10 @@
     }
 
     const clearData = () => {
-        if (confirm('Are you sure you want to clear all counter data?'))
-            data.clear();
+        if (!confirm('Are you sure you want to clear all counter data?'))
+            return;
 
+        data.clear();
         counters = [];
         page = 'counters';
     }
@@ -164,11 +167,18 @@
         page = data.getLastPage();
 
         let [newStatName, newTimeMode] = data.getStatsOptions();
+        let [newStartDate, newEndDate] = data.getCustomDates();
+        console.log(newStartDate, newEndDate);
 
-        if (newStatName)
-            statName = newStatName;
-        if (newTimeMode)
-            timeMode = newTimeMode;
+        if (newStartDate == 'today')
+            newStartDate = today();
+        if (newEndDate == 'today')
+            newEndDate = today();
+
+        statName = newStatName ? newStatName : statName;
+        timeMode = newTimeMode ? newTimeMode : timeMode;
+        customStartDate = newStartDate ? newStartDate : customStartDate;
+        customEndDate = newEndDate ? newEndDate : customEndDate;
 
         window.addEventListener('mousedown', dragStart);
         window.addEventListener('touchstart', dragStart);
@@ -193,12 +203,18 @@
             data.saveCounters($state.snapshot(counters));
     });
 
-    $effect(() => {
-        data.setLastPage(page);
-    });
+    $effect(() => data.setLastPage(page));
+    $effect(() => data.setStatsOptions([statName, timeMode]));
 
     $effect(() => {
-        data.setStatsOptions([statName, timeMode]);
+        let [start, end] = [customStartDate, customEndDate];
+
+        if (start == today())
+            start = 'today';
+        if (end == today())
+            end = 'today';
+
+        data.setCustomDates([start, end]);
     });
 
     $effect(() => {
@@ -212,7 +228,9 @@
 {#if page == 'counters'}
     <div id="counter-page-container">
         <Header bind:page />
-        <DateSelector bind:selectedDate />
+        <span style:font-size="22px">
+            <DateSelector bind:selectedDate />
+        </span>
         <div class="counter-content" style:overflow={draggingIndex > -1 ? 'hidden' : 'auto'}>
             {#each counters as c, index (c)}
                 <Counter
@@ -259,26 +277,55 @@
         <option value="alltime">All time</option>
     </select>
 
-    <Chart name={statName} {timeMode} {infoElems} />
+    {#if timeMode == 'custom'}
+        <div class="row">
+            <div class="label">Start Date</div>
+            <DateSelector bind:selectedDate={customStartDate} />
+        </div>
+
+        <div class="row">
+            <div class="label">End Date</div>
+            <DateSelector bind:selectedDate={customEndDate} />
+        </div>
+
+        <Chart
+            name={statName}
+            startDate={customStartDate}
+            endDate={customEndDate}
+            {timeMode}
+            {infoElems}
+        />
+    {:else}
+        <Chart
+            name={statName}
+            {timeMode}
+            {infoElems}
+        />
+    {/if}
 
     <div class="info-container">
-    <div bind:this={infoElems.total}>Total: 0</div>
-    <div bind:this={infoElems.currentStreak}>Current Streak: 0</div>
+        <div bind:this={infoElems.count}>Count: 0</div>
+        <div bind:this={infoElems.currentStreak}>Current Streak: 0</div>
     </div>
 
     <div class="info-container">
-    <div bind:this={infoElems.average}>Average: 0</div>
-    <div bind:this={infoElems.longestStreak}>Longest Streak: 0</div>
+        <div bind:this={infoElems.sum}>Sum: 0</div>
+        <div bind:this={infoElems.longestStreak}>Longest Streak: 0</div>
     </div>
 
     <div class="info-container">
-    <div bind:this={infoElems.max}>Max: 0</div>
-    <div bind:this={infoElems.currentZeroStreak}>Current Zero Streak: 0</div>
+        <div bind:this={infoElems.max}>Max: 0</div>
+        <div bind:this={infoElems.currentZeroStreak}>Current Zero Streak: 0</div>
     </div>
 
     <div class="info-container">
-    <div bind:this={infoElems.gradient}>Gradient: +0</div>
-    <div bind:this={infoElems.longestZeroStreak}>Longest Zero Streak: 0</div>
+        <div bind:this={infoElems.average}>Average: 0</div>
+        <div bind:this={infoElems.longestZeroStreak}>Longest Zero Streak: 0</div>
+    </div>
+
+    <div class="info-container">
+        <div bind:this={infoElems.nonZeroAverage}>Non-Zero Average: 0</div>
+        <div bind:this={infoElems.gradient}>Gradient: +0</div>
     </div>
 
     <div class="row-container" style:margin-top="15px">
@@ -293,7 +340,7 @@
     .info-container {
         display: flex;
         justify-content: space-between;
-        padding: 5px 30px;
+        padding: 5px 24px;
     }
 
     .row-container {
@@ -311,5 +358,24 @@
     .counter-content {
         flex-grow: 1;
         overflow-y: auto;
+    }
+
+    div.row {
+        display: flex;
+        flex-direction: row;
+        /* justify-content: space-between; */
+    }
+
+    :global(div.row > *) {
+        flex-grow: 1;
+    }
+
+    div.label {
+        width: 100px;
+        /* text-align: right; */
+        /* text-align: center; */
+        padding: 12px;
+        flex-grow: 0;
+        background: #a9d4ff;
     }
 </style>
