@@ -125,8 +125,7 @@
         }
 
         // Display all info
-        infoElems.count.innerText = `Count: ${values.length} (${nonZeroCount})`;
-        infoElems.count.innerHTML = `Count: ${values.length} (${nonZeroCount})`;
+        infoElems.days.innerText = `Days: ${values.length} (${nonZeroCount})`;
         infoElems.sum.innerHTML = `Sum: ${round(sum, 2)}`;
         infoElems.max.innerHTML = `Max: ${round(Math.max(...values), 2)}`;
         infoElems.average.innerHTML = `Average: ${round(average, 2)}`;

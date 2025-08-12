@@ -304,7 +304,7 @@
     {/if}
 
     <div class="info-container">
-        <div bind:this={infoElems.count}>Count: 0</div>
+        <div bind:this={infoElems.days}>Count: 0</div>
         <div bind:this={infoElems.currentStreak}>Current Streak: 0</div>
     </div>
 
