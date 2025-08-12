@@ -30,7 +30,6 @@
         min-width: 100px;
         width: 85vw;
         max-height: 85vh;
-        margin-bottom: 100px;
         display: flex;
         flex-direction: column;
         justify-content: center;

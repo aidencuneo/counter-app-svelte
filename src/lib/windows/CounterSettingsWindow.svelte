@@ -28,7 +28,7 @@
     <row>
         <!-- <left>Name</left> -->
         <right>
-            <input type="text" id="name" bind:value={curName} onclick={e => e.target.select()}>
+            <input type="text" id="name" bind:value={curName} onfocus={e => e.target.select()}>
             <!-- svelte-ignore a11y_click_events_have_key_events -->
             <!-- svelte-ignore a11y_no_static_element_interactions -->
             <icon-wrapper
