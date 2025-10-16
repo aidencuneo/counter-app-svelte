@@ -7,7 +7,7 @@
     let { value = $bindable(), date, style } = $props();
 
     const changeValue = () => {
-        const newValue = prompt('Enter a new value:', value);
+        const newValue = prompt('Enter a new value:', value ? value : '');
         const time = timeToNum(newValue);
         let calculated = undefined;
         let evalVars = '';

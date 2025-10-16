@@ -105,7 +105,12 @@ export function gatherValues(name, from, to) {
 }
 
 export function getLastPage() {
-    return localStorage.getItem('counter_page') ?? 'counter';
+    let page = localStorage.getItem('counter_page') ?? 'counter';
+
+    if (page != 'counters' && page != 'stats')
+        page = 'counters';
+
+    return page;
 }
 
 export function setLastPage(lastPage) {

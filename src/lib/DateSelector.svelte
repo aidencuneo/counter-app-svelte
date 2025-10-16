@@ -1,6 +1,6 @@
 <script>
     import { onMount } from "svelte";
-    import { addDays, dateToStr, getDaysInMonth } from "./dates";
+    import { addDays, dateToStr, getDaysInMonth, today } from "./dates";
     import Button from "./Button.svelte";
     import Icon from "./Icon.svelte";
 
@@ -75,8 +75,10 @@
     <select bind:this={daySelector} bind:value={day}></select>
 
     {#if hasButtons}
-        <Button bg="#a9d4ff" padding="" onclick={nextDay}>
-            <Icon style="font-size: 140%; margin-top: 3px;">chevron_right</Icon>
+        <Button bg="#a9d4ff" padding="" onclick={nextDay} disabled={selectedDate == today()}>
+            {#if selectedDate != today()}
+                <Icon style="font-size: 140%; margin-top: 3px;">chevron_right</Icon>
+            {/if}
         </Button>
     {/if}
 </div>
